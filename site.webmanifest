@@ -1,6 +1,6 @@
 {
-  "name": "工学院バス時刻表",
-  "short_name": "時刻表",
+  "name": "バス時刻表ビューア",
+  "short_name": "時刻表ビューア",
   "start_url": "./",
   "scope": "./",
   "orientation": "any",
@@ -19,7 +19,7 @@
     }
   ],
   "shortcuts": [],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "background_color": "#000000",
   "display": "standalone"
 }
