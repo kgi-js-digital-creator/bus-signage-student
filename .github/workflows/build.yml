@@ -1,0 +1,27 @@
+name: Build Vite Project
+
+on:
+  workflow_call:
+    inputs:
+      BASE:
+        required: true
+        type: string
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      BASE: ${{ inputs.BASE }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Create .nojekyll
+        run: touch dist/.nojekyll
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/
