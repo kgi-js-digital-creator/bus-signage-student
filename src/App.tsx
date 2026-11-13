@@ -27,12 +27,7 @@ export default function App() {
   return (
     <div className="flex flex-col select-none w-full h-full text-neutral-950 dark:text-neutral-50 bg-white dark:bg-black whitespace-nowrap transition-colors duration-500">
       <header className="flex flex-row w-full h-16 px-4 items-center justify-between bg-neutral-200 dark:bg-neutral-800 transition-colors duration-500">
-        <button
-          type="button"
-          onClick={() => setSelectedTimetableId(null)}
-          aria-label="戻る"
-          className={`${isHome ? 'invisible' : ''} text-5xl border-2 border-neutral-300 dark:border-neutral-600 p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-100 hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer transition-colors duration-500`}
-        >
+        <button type="button" onClick={() => setSelectedTimetableId(null)} aria-label="戻る" className={`${isHome ? 'invisible' : ''} text-5xl border-2 border-neutral-300 dark:border-neutral-600 p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-100 hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer transition-colors duration-500`}>
           <ChevronLeft />
         </button>
         <button type="button" onClick={toggleTheme} aria-label={isDark ? 'ライトモードに切り替える' : 'ダークモードに切り替える'} title={isDark ? 'ライトモードに切り替える' : 'ダークモードに切り替える'} className="relative flex items-center justify-between w-16 h-8 p-2 rounded-full border-2 border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 cursor-pointer transition-colors duration-500">
@@ -40,7 +35,7 @@ export default function App() {
           <Moon className="w-4 h-4" />
           <span className={`absolute flex left-0.5 w-6 h-6 items-center justify-center rounded-full bg-white dark:bg-neutral-600 shadow-md transition-transform duration-200 ease-in-out ${isDark ? 'translate-x-8' : 'translate-x-0'}`}>
             {isDark ? (
-              <Moon className="w-4 h-4 text-blue-400" />
+              <Moon className="w-4 h-4 text-yellow-400" />
             ) : (
               <Sun className="w-4 h-4 text-orange-500" />
             )}
