@@ -111,7 +111,7 @@ export default function Timetable({ id, timetable, now }: TimetableProps) {
               >
                 {/* 時 (Hour) */}
                 <div
-                  className={`w-16 md:w-20 shrink-0 flex items-center justify-center text-3xl md:text-4xl font-bold select-none tabular-nums transition-colors duration-500 ${hour % 2 === 0
+                  className={`w-16 md:w-20 min-h-16 shrink-0 flex items-center justify-center text-3xl md:text-4xl font-bold select-none tabular-nums transition-colors duration-500 ${hour % 2 === 0
                     ? "bg-sky-100 dark:bg-neutral-600"
                     : "bg-sky-200 dark:bg-neutral-800"
                     }`}
