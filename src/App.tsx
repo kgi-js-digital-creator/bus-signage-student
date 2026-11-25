@@ -8,9 +8,40 @@ import Timetable from "./pages/Timetable";
 export default function App() {
   const { isDark, toggleTheme } = useTheme()
   const [selectedTimetableId, setSelectedTimetableId] = useState<string | null>(null)
+  const [timetableData, setTimetableData] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const [now, setNow] = useState(() => new Date());
 
   const isHome = selectedTimetableId === null
+
+  useEffect(() => {
+    let isMounted = true;
+    async function fetchTimetable() {
+      try {
+        const response = await fetch(
+          "https://kgi-js-digital-creator.github.io/bus-timetable-database/timetable.json",
+          { cache: "no-cache" }
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (isMounted) {
+          setTimetableData(data);
+        }
+      } catch (error) {
+        console.error("時刻表データの取得に失敗しました:", error);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+    fetchTimetable();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     let timerId: ReturnType<typeof setTimeout>;
@@ -54,9 +85,12 @@ export default function App() {
       </header>
       <main className="flex flex-1 min-h-0 w-full justify-center bg-neutral-50 dark:bg-neutral-950 overflow-y-auto transition-colors duration-500">
         {selectedTimetableId ? (
-          <Timetable id={selectedTimetableId} />
+          <Timetable id={selectedTimetableId} timetable={timetableData} now={now} />
         ) : (
-          <Home onSelectTimetable={(id) => setSelectedTimetableId(id)} />
+          <Home
+            onSelectTimetable={(id) => setSelectedTimetableId(id)}
+            isLoading={isLoading}
+          />
         )}
       </main>
       <footer className="flex flex-row w-full h-8 px-2 items-center bg-neutral-200 dark:bg-neutral-800 transition-colors duration-500">
