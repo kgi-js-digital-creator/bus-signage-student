@@ -4,15 +4,23 @@ import { ChevronLeft, Moon, Sun } from 'lucide-react'
 import { useTheme } from './hooks/useTheme'
 import Home from "./pages/Home";
 import Timetable from "./pages/Timetable";
+import NotUpdated from "./pages/NotUpdated";
+import type { TimetableJson } from "./types/TimetableJson";
 
 export default function App() {
   const { isDark, toggleTheme } = useTheme()
   const [selectedTimetableId, setSelectedTimetableId] = useState<string | null>(null)
-  const [timetableData, setTimetableData] = useState<any>(null)
+  const [timetableData, setTimetableData] = useState<TimetableJson | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [now, setNow] = useState(() => new Date());
 
-  const isHome = selectedTimetableId === null
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  const todayStr = `${year}-${month}-${day}`;
+
+  const isNotUpdated = !isLoading && Boolean(timetableData?.update && timetableData.update !== todayStr);
+  const isHome = selectedTimetableId === null || isNotUpdated
 
   useEffect(() => {
     let isMounted = true;
@@ -84,8 +92,10 @@ export default function App() {
         </div>
       </header>
       <main className="flex flex-1 min-h-0 w-full justify-center bg-neutral-50 dark:bg-neutral-950 overflow-y-auto transition-colors duration-500">
-        {selectedTimetableId ? (
-          <Timetable id={selectedTimetableId} timetable={timetableData} now={now} />
+        {isNotUpdated ? (
+          <NotUpdated updateDate={timetableData?.update} />
+        ) : selectedTimetableId ? (
+          <Timetable id={selectedTimetableId} timetable={timetableData ?? undefined} now={now} />
         ) : (
           <Home
             onSelectTimetable={(id) => setSelectedTimetableId(id)}
