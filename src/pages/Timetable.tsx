@@ -86,16 +86,16 @@ export default function Timetable({ id, timetable, now }: TimetableProps) {
   }, [hourGroups])
 
   return (
-    <div className="flex flex-col w-full h-full border-y-2 border-neutral-300 dark:border-neutral-700 transition-colors duration-500">
-      <div className="flex flex-row items-end w-full h-fit px-4 py-3 gap-4 bg-neutral-200 dark:bg-neutral-800 transition-colors duration-500">
-        <div className="font-bold text-4xl leading-none">{routeData?.stop ?? id}</div>
+    <div className="flex flex-col w-full h-full border-y-2 border-neutral-300 dark:border-neutral-700 overflow-x-hidden transition-colors duration-500">
+      <div className="flex flex-row items-end w-full h-fit px-3 py-3 gap-2 bg-neutral-200 dark:bg-neutral-800 transition-colors duration-500">
+        <div className="font-bold text-3xl leading-none">{routeData?.stop ?? id}</div>
         <div className="flex flex-col justify-end gap-1">
-          <div className="font-medium text-base leading-none">{routeData?.line ?? ""}</div>
-          <div className="font-medium text-base leading-none">{routeData?.name ?? ""}</div>
+          <div className="font-medium text-xs leading-none">{routeData?.line ?? ""}</div>
+          <div className="font-medium text-xs leading-none">{routeData?.name ?? ""}</div>
         </div>
       </div>
 
-      <div className="flex flex-col flex-1 min-h-0 w-full overflow-y-auto">
+      <div className="flex flex-col flex-1 min-h-0 w-full overflow-auto">
         {hourGroups.length === 0 ? (
           <div className="flex flex-1 items-center justify-center text-neutral-500 text-lg transition-colors duration-500">
             時刻表データがありません
@@ -107,7 +107,7 @@ export default function Timetable({ id, timetable, now }: TimetableProps) {
               <div
                 key={hour}
                 ref={isTargetHour ? currentHourRowRef : undefined}
-                className="flex flex-row min-h-16 md:min-h-20 border-b border-neutral-300 dark:border-neutral-800 transition-colors duration-500"
+                className="flex flex-row shrink-0 h-auto min-h-16 md:min-h-20 border-b border-neutral-300 dark:border-neutral-800 transition-colors duration-500"
               >
                 {/* 時 (Hour) */}
                 <div
@@ -120,11 +120,11 @@ export default function Timetable({ id, timetable, now }: TimetableProps) {
                 </div>
 
                 {/* 分 (Minutes) */}
-                <div className="flex-1 flex flex-row flex-wrap items-center gap-x-4 md:gap-x-6 gap-y-2 px-4 md:px-6 py-2 bg-neutral-100 dark:bg-[#151515] transition-colors duration-500">
+                <div className="flex-1 flex flex-row flex-wrap items-start content-start gap-x-4 md:gap-x-6 gap-y-2 px-4 md:px-6 py-2 bg-neutral-100 dark:bg-[#151515] transition-colors duration-500">
                   {buses.map((bus) => (
                     <div
                       key={bus.id}
-                      className={`flex flex-row items-baseline px-2 py-1 rounded-xs transition-colors duration-500 select-none ${bus.isNext
+                      className={`shrink-0 flex flex-row items-baseline px-2 py-1 rounded-xs transition-colors duration-500 select-none ${bus.isNext
                         ? "border-4 border-red-600 text-neutral-900 dark:text-white"
                         : bus.isPast
                           ? "border-4 border-transparent text-neutral-400 dark:text-neutral-500"
@@ -158,20 +158,14 @@ export default function Timetable({ id, timetable, now }: TimetableProps) {
           <div className="text-xs md:text-sm font-medium text-neutral-700 dark:text-neutral-300 transition-colors duration-500">
             注記・備考
           </div>
-          <ChevronUp
-            className={`w-4 h-4 text-neutral-600 dark:text-neutral-300 transition-transform duration-300 ${isExpanded ? "rotate-180" : "rotate-0"
-              }`}
-          />
+          <ChevronUp className={`w-4 h-4 text-neutral-600 dark:text-neutral-300 transition-transform duration-300 ${isExpanded ? "rotate-180" : "rotate-0"}`} />
         </button>
-        <div
-          className={`overflow-hidden transition-all duration-300 ease-in-out ${isExpanded ? "max-h-40" : "max-h-0"
-            }`}
-        >
-          <div className="flex flex-col px-3 py-2 gap-1 max-h-40 overflow-y-auto text-xs md:text-sm text-neutral-800 dark:text-neutral-200 transition-colors duration-500">
+        <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isExpanded ? "max-h-40" : "max-h-0"}`}>
+          <div className="flex flex-col px-2 py-2 gap-1 max-h-40 overflow-y-auto text-xs md:text-sm text-neutral-800 dark:text-neutral-200 transition-colors duration-500">
             {descriptions.length > 0 ? (
               descriptions.map((desc, idx) => (
                 <div key={idx} className="flex items-start">
-                  <div className="mr-2 text-neutral-500">•</div>
+                  <div className="mr-1 text-neutral-500">•</div>
                   <div>{desc}</div>
                 </div>
               ))
