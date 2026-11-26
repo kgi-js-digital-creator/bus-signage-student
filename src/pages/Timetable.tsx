@@ -120,11 +120,11 @@ export default function Timetable({ id, timetable, now }: TimetableProps) {
                 </div>
 
                 {/* 分 (Minutes) */}
-                <div className="flex-1 flex flex-row flex-wrap items-start content-start gap-x-4 md:gap-x-6 gap-y-2 px-4 md:px-6 py-2 bg-neutral-100 dark:bg-[#151515] transition-colors duration-500">
+                <div className="flex-1 grid grid-cols-[repeat(auto-fill,minmax(5.5rem,1fr))] items-start content-start justify-start gap-x-2 gap-y-2 px-4 md:px-6 py-2 bg-neutral-100 dark:bg-[#151515] transition-colors duration-500">
                   {buses.map((bus) => (
                     <div
                       key={bus.id}
-                      className={`shrink-0 flex flex-row items-baseline px-2 py-1 rounded-xs transition-colors duration-500 select-none ${bus.isNext
+                      className={`justify-self-start flex flex-row items-baseline px-2 py-1 rounded-xs transition-colors duration-500 select-none ${bus.isNext
                         ? "border-4 border-red-600 text-neutral-900 dark:text-white"
                         : bus.isPast
                           ? "border-4 border-transparent text-neutral-400 dark:text-neutral-500"
