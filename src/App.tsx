@@ -9,7 +9,13 @@ import type { TimetableJson } from "./types/TimetableJson";
 
 export default function App() {
   const { isDark, toggleTheme } = useTheme()
-  const [selectedTimetableId, setSelectedTimetableId] = useState<string | null>(null)
+  const [selectedTimetableId, setSelectedTimetableId] = useState<string | null>(() => {
+    if (typeof window !== "undefined") {
+      const hash = window.location.hash.replace(/^#\/?/, "");
+      return hash || null;
+    }
+    return null;
+  })
   const [timetableData, setTimetableData] = useState<TimetableJson | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [now, setNow] = useState(() => new Date());
@@ -21,6 +27,40 @@ export default function App() {
 
   const isNotUpdated = !isLoading && Boolean(timetableData?.update && timetableData.update !== todayStr);
   const isHome = selectedTimetableId === null || isNotUpdated
+
+  useEffect(() => {
+    const initialHash = window.location.hash.replace(/^#\/?/, "");
+    if (initialHash) {
+      window.history.replaceState({ timetableId: null }, "", window.location.pathname + window.location.search);
+      window.history.pushState({ timetableId: initialHash }, "", `#${initialHash}`);
+    } else {
+      window.history.replaceState({ timetableId: null }, "", window.location.pathname + window.location.search);
+    }
+
+    const handlePopState = (e: PopStateEvent) => {
+      const timetableId = e.state?.timetableId ?? (window.location.hash.replace(/^#\/?/, "") || null);
+      setSelectedTimetableId(timetableId);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
+  const handleSelectTimetable = (id: string) => {
+    setSelectedTimetableId(id);
+    window.history.pushState({ timetableId: id }, "", `#${id}`);
+  };
+
+  const handleBack = () => {
+    if (window.history.state?.timetableId) {
+      window.history.back();
+    } else {
+      setSelectedTimetableId(null);
+      window.history.replaceState({ timetableId: null }, "", window.location.pathname + window.location.search);
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -66,7 +106,7 @@ export default function App() {
   return (
     <div className="flex flex-col select-none w-full h-full text-neutral-950 dark:text-neutral-50 bg-white dark:bg-black whitespace-nowrap transition-colors duration-500">
       <header className="flex flex-row w-full h-16 px-4 items-center justify-between bg-neutral-200 dark:bg-neutral-800 transition-colors duration-500">
-        <button type="button" onClick={() => setSelectedTimetableId(null)} aria-label="戻る" className={`${isHome ? 'invisible' : ''} text-5xl border-2 border-neutral-300 dark:border-neutral-600 p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-100 hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer transition-colors duration-500`}>
+        <button type="button" onClick={handleBack} aria-label="戻る" className={`${isHome ? 'invisible' : ''} text-5xl border-2 border-neutral-300 dark:border-neutral-600 p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-100 hover:bg-neutral-300 dark:hover:bg-neutral-600 cursor-pointer transition-colors duration-500`}>
           <ChevronLeft />
         </button>
         <button type="button" onClick={toggleTheme} aria-label={isDark ? 'ライトモードに切り替える' : 'ダークモードに切り替える'} title={isDark ? 'ライトモードに切り替える' : 'ダークモードに切り替える'} className="relative flex items-center justify-between w-16 h-8 p-2 rounded-full border-2 border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 cursor-pointer transition-colors duration-500">
@@ -98,7 +138,7 @@ export default function App() {
           <Timetable id={selectedTimetableId} timetable={timetableData ?? undefined} now={now} />
         ) : (
           <Home
-            onSelectTimetable={(id) => setSelectedTimetableId(id)}
+            onSelectTimetable={handleSelectTimetable}
             isLoading={isLoading}
           />
         )}
